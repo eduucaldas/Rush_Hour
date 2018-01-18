@@ -25,11 +25,7 @@ public class Solver {
     }
 
     //Need a function file_to_state
-    private State file_to_state(String fileName) {
-
-    }
-
-    public void read_file(String fileName){
+    private State file_to_state(String fileName){
         //we will assume that the file has the correct format
         String line = null;
         try {
@@ -50,22 +46,24 @@ public class Solver {
 
                 Car car = new Car(line);
 
-                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                //tenho que fazer um if aqui pra ver se adicionou corretamente
+                if(!initial_state.add_car(car)){
+                    System.err.println("Car Overlapping!");
+                    return null;
+                }
                 initial_state.add_car(car);
 
                 }
 
-            initial_state.print_state();
 
             bufferedReader.close();
         }
         catch(FileNotFoundException ex) {
-            System.out.println("Unable to open file '" + fileName + "'");
+            System.err.println("Unable to open file '" + fileName + "'");
         }
         catch(IOException ex) {
-            System.out.println("Error reading file '" + fileName + "'");
+            System.err.println("Error reading file '" + fileName + "'");
         }
+        return initial_state;
     }
 
     public static void main(String [] args) {

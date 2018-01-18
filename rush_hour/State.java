@@ -31,7 +31,7 @@ public class State {
     public int get_number_of_cars(){
         return this.number_of_cars;
     }
-
+    // says if it is ok to add car to the actual state
     public boolean is_valid(Car car){
         int x = car.x;
         int y = car.y;
@@ -47,7 +47,7 @@ public class State {
         }
         return true;
     }
-
+    //Says if the tile (x,y) is vacant, i.e. has no car passing through it
     public boolean is_vacant(int x, int y) {
         if(x >= this.get_size() || y >= this.get_size()){
             System.err.out("Out of grid");
@@ -58,7 +58,6 @@ public class State {
                 return false;
             }
             else if(c.dir() == Car.HORIZONTAL && c.y == y && x - c.x >= 0 && x - c.x <= c.len()) {
-
                 return false;
             }
         }
@@ -73,6 +72,7 @@ public class State {
             board[car.x + inc_x*i][car.y + inc_y*i] = id;
         }
     }
+
 
     public void print_state(){
         int[][] board = new int[size][size];
@@ -91,7 +91,7 @@ public class State {
     }
 
     public boolean add_car(Car car){
-        if(!is_valid(car)) return false;
+        if(!is_valid(car)) return false;//Should print err
         cars.add(car);
         return true;
     }

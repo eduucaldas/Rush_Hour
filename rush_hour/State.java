@@ -37,6 +37,20 @@ public class State {
     	return true;
     }
 
+    public boolean is_vacant(int x, int y) {
+        if(x >= this.size() || y >= this.size())
+            return false;
+        for(Car c: cars) {
+            if(c.dir() == Car.VERTICAL && c.x == x && y - c.y >= 0 && y - c.y <= c.len()) {
+                return false;
+            }
+            else if(c.dir() == Car.HORIZONTAL && c.y == y && x - c.x >= 0 && x - c.x <= c.len()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void print_add(Car car, int[][] board, int type, int id){
     	int inc_x = ((type == 1 || type == 2) ? 1 : 0);
     	int inc_y = ((inc_x == 0) ? 1 : 0);
@@ -65,7 +79,7 @@ public class State {
     public boolean add_car(Car car){
     	if(!is_valid(car)) return false;
     	switch(car.get_type()){
-            case 1: 
+            case 1:
                 type_1.add(car);
                 break;
             case 2:

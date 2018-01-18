@@ -50,7 +50,7 @@ public class State {
     //Says if the tile (x,y) is vacant, i.e. has no car passing through it
     public boolean is_vacant(int x, int y) {
         if(x >= this.get_size() || y >= this.get_size()){
-            System.err.println("Out of grid");
+            //System.err.println("Out of grid");
             return false;
         }
         for(Car c: cars) {

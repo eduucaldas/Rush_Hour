@@ -7,14 +7,20 @@ public class Car {
 	final static int LARGE = 3;
 	final static char VERTICAL = 'v';
 	final static char HORIZONTAL = 'h';
+	private final int id;
 	private final int len;
 	private final char dir;
 	private final boolean red;
 	public int x;
 	public int y;
 
-	public Car(boolean red, int len, char dir, int x, int y) {
+	public Car(int id, boolean red, int len, char dir, int x, int y) {
 		this.red = red;
+
+		if(id>0)
+			this.id = id;
+		else
+			throw new IllegalArgumentException("id = " + id + " Should be greater than 0");
 
 		if(len == SMALL || len == LARGE)
 			this.len = len;
@@ -40,10 +46,15 @@ public class Car {
 		int id = Integer.parseInt(st.nextToken());
 		char dir = st.nextToken().toString().charAt(0);
 		int len = Integer.parseInt(st.nextToken());
-		int x = Integer.parseInt(st.nextToken());
-		int y = Integer.parseInt(st.nextToken());
+		int x = Integer.parseInt(st.nextToken()) - 1;
+		int y = Integer.parseInt(st.nextToken()) - 1;
 
 		this.red = (id == 1);
+
+		if(id>0)
+			this.id = id;
+		else
+			throw new IllegalArgumentException("id = " + id + " Should be greater than 0");
 
 		if(len == SMALL || len == LARGE)
 			this.len = len;
@@ -65,7 +76,11 @@ public class Car {
 
 	public int get_type(){
 
-		return (this.len - 2) + ((dir == HORIZONTAL)? 1 : 0);
+		return (this.len - 1) + ((dir == HORIZONTAL)? 0 : 2);
+	}
+
+	public int id() {
+		return this.id;
 	}
 
 	public int len() {

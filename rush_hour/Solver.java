@@ -26,11 +26,13 @@ public class Solver {
 
                 Car car = new Car(line);
                 
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                //tenho que fazer um if aqui pra ver se adicionou corretamente
                 initial_state.add_car(car);
 
-                initial_state.print_state();
-
                 }
+
+            initial_state.print_state();
 
             bufferedReader.close();         
         }

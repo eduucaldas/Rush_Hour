@@ -43,8 +43,41 @@ public class State {
     	return true;
     }
 
+    private void print_add(Car car, int[][] board, int type, int id){
+    	//int color = ((car.red()) ? 9 : 2*type - 1);//the red car will be 'colored' 9
+    	int inc_x = ((type == 1 || type == 2) ? 1 : 0);
+    	int inc_y = ((inc_x == 0) ? 1 : 0);
+
+    	for(int i=0; i<car.len(); i++){
+    		//board[car.x + inc_x*i][car.y + inc_y*i] = ((i==0) ? color : ((color == 9) ? 8 : color) + 1);
+    		board[car.x + inc_x*i][car.y + inc_y*i] = id;
+    	}
+    }
+
     public void print_state(){
-    	System.out.println("TODO");
+    	int[][] board = new int[size][size];
+
+    	for(Car car : type_1){
+    		this.print_add(car, board, 1, car.id());
+    	}
+    	for(Car car : type_2){
+    		this.print_add(car, board, 2, car.id());
+    	}
+    	for(Car car : type_3){
+    		this.print_add(car, board, 3, car.id());
+    	}
+    	for(Car car : type_4){
+    		this.print_add(car, board, 4, car.id());
+    	}
+
+    	for(int j=0; j<size; j++){
+    		for(int i=0; i<size; i++){
+    			//System.out.print(board[i][j]+" ");
+    			System.out.print(board[i][j]+"\t");
+    		}
+    		System.out.println("");
+    	}
+    	System.out.println("");
     }
 
     public boolean add_car(Car car){
@@ -57,10 +90,10 @@ public class State {
                 type_2.add(car);
                 break;
             case 3:
-                type_2.add(car);
+                type_3.add(car);
                 break;
             case 4:
-                type_2.add(car);
+                type_4.add(car);
                 break;
     	}
     	return true;

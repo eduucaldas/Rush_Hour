@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.*;
 
 public class Solver {
-
     public void read_file(String fileName){
         //we will assume that the file has the correct format
         String line = null;
@@ -25,7 +24,7 @@ public class Solver {
             while((line = bufferedReader.readLine()) != null) {//read line
 
                 Car car = new Car(line);
-                
+
                 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 //tenho que fazer um if aqui pra ver se adicionou corretamente
                 if(!initial_state.add_car(car)){
@@ -37,10 +36,10 @@ public class Solver {
 
             initial_state.print_state();
 
-            bufferedReader.close();         
+            bufferedReader.close();
         }
         catch(FileNotFoundException ex) {
-            System.out.println("Unable to open file '" + fileName + "'");                
+            System.out.println("Unable to open file '" + fileName + "'");
         }
         catch(IOException ex) {
             System.out.println("Error reading file '" + fileName + "'");

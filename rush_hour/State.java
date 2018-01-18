@@ -36,7 +36,7 @@ public class State {
         int x = car.x;
         int y = car.y;
         switch(car.get_type()){
-            case 1: 
+            case 1:
                 return (is_vacant(x,y) && is_vacant(x+1,y));
             case 2:
                 return (is_vacant(x,y) && is_vacant(x+1,y) && is_vacant(x+2,y));
@@ -49,18 +49,21 @@ public class State {
     }
 
     public boolean is_vacant(int x, int y) {
-        if(x >= this.size || y >= this.size)
+        if(x >= this.get_size() || y >= this.get_size()){
+            System.err.out("Out of grid");
             return false;
+        }
         for(Car c: cars) {
             if(c.dir() == Car.VERTICAL && c.x == x && y - c.y >= 0 && y - c.y <= c.len()) {
                 return false;
             }
             else if(c.dir() == Car.HORIZONTAL && c.y == y && x - c.x >= 0 && x - c.x <= c.len()) {
+
                 return false;
             }
         }
         return true;
-}
+    }
 
     private void print_add(Car car, int[][] board, int type, int id){
         int inc_x = ((type == 1 || type == 2) ? 1 : 0);

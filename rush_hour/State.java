@@ -54,10 +54,10 @@ public class State {
             return false;
         }
         for(Car c: cars) {
-            if(c.dir() == Car.VERTICAL && c.x == x && y - c.y >= 0 && y - c.y <= c.len()) {
+            if(c.dir() == Car.VERTICAL && c.x == x && y - c.y >= 0 && y - c.y < c.len()) {
                 return false;
             }
-            else if(c.dir() == Car.HORIZONTAL && c.y == y && x - c.x >= 0 && x - c.x <= c.len()) {
+            else if(c.dir() == Car.HORIZONTAL && c.y == y && x - c.x >= 0 && x - c.x < c.len()) {
                 return false;
             }
         }

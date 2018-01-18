@@ -28,9 +28,12 @@ public class Solver {
                 
                 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 //tenho que fazer um if aqui pra ver se adicionou corretamente
-                initial_state.add_car(car);
-
+                if(!initial_state.add_car(car)){
+                	System.out.println("Car Overlapping!");
+                	return;
                 }
+
+            }
 
             initial_state.print_state();
 

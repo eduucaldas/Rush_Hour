@@ -16,6 +16,12 @@ public class State {
         cars = new ArrayList<Car>();
     }
 
+    public State(State other) {
+        this.size = other.size;
+        this.number_of_cars = other.number_of_cars;
+        this.cars = new ArrayList<Car>(other.cars);
+    }
+
     public void set_size(int size){
         this.size = size;
     }

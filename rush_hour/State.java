@@ -7,7 +7,7 @@ public class State {
 
     private int size;
     private int number_of_cars;
-
+    private Car redCar;
     private ArrayList<Car> cars;
 
     public State(){
@@ -62,6 +62,20 @@ public class State {
             }
         }
         return true;
+    }
+
+    //this is O(n) shame on me
+    //Not tested
+    public void redCar() {
+        if(!(this.redCar != null && this.redCar.red())){
+            for (int i = 0; i < cars.size(); i++) {
+                if(cars.get(i).red()) this.redCar = cars.get(i);
+            }
+        }
+    }
+    //Not tested
+    public boolean is_end() {
+        return (redCar.dir() == Car.HORIZONTAL && (this.get_size() - redCar.x <= redCar.len()) || redCar.dir() == Car.VERTICAL && (this.get_size() - redCar.y <= redCar.len()));
     }
 
     private void print_add(Car car, int[][] board, int type, int id){

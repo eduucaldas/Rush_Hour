@@ -8,24 +8,31 @@ public class Solver {
     Set<State> explored;
     Queue<State> border;
 
-    public Solver(String fileName) {
+    public Solver(String fileName) throws Exception{
         this.explored = new TreeSet<State>();
         this.border = new LinkedList<State>();
-        this.border.add(Solver.file_to_state(fileName));
+        State init = Solver.file_to_state(fileName);
+        if(init != null)
+            this.border.add(init);
+        else
+            throw new IllegalArgumentException("error from file to state construct");
     }
 
     public void evolution() {
-
+        while(!this.border.isEmpty() && !this.border.peek().is_end()) {
+            this.border.addAll(possible_moves(this.border.peek()));
+            this.explored.add(this.border.poll());
+        }
     }
 
     //need a function possible states
     //will just put all valid states to border
-    private LinkedState possible_moves(State actual) {
+    private LinkedList<State> possible_moves(State actual) {
 
     }
 
     //Need a function file_to_state
-    private State file_to_state(String fileName){
+    private static State file_to_state(String fileName){
         //we will assume that the file has the correct format
         String line = null;
         try {
@@ -52,10 +59,10 @@ public class Solver {
                 }
                 initial_state.add_car(car);
 
-                }
-
+            }
 
             bufferedReader.close();
+            return initial_state;
         }
         catch(FileNotFoundException ex) {
             System.err.println("Unable to open file '" + fileName + "'");
@@ -63,11 +70,10 @@ public class Solver {
         catch(IOException ex) {
             System.err.println("Error reading file '" + fileName + "'");
         }
-        return initial_state;
+        return null;
     }
 
-    public static void main(String [] args) {
-        Solver game = new Solver();
-        game.read_file("test");
+    public static void main(String [] args) throws Exception {
+        Solver game = new Solver("test");
     }
 }

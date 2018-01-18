@@ -16,7 +16,7 @@ public class State {
         cars = new ArrayList<Car>();
     }
 
-    public State(State other) {
+    public State(State other) {//clone
         this.size = other.size;
         this.number_of_cars = other.number_of_cars;
         this.cars = new ArrayList<Car>(other.cars);
@@ -116,7 +116,81 @@ public class State {
         return true;
     }
 
+    private boolean add_car_bypass(Car car){//bypasses verification
+        cars.add(car);
+        return true;
+    }
+
+    public void remove_car(Car car){
+        cars.remove(car);
+    }
+
     public void sort(){
         Collections.sort(cars);
+    }
+
+    //still needs testing!
+    public LinkedList<State> possible_moves(){
+        LinkedList<State> moves = new LinkedList<State>();
+
+        //auxiliary variables (we will only need 2 while statements with this)
+        int dir_x;
+        int dir_y;
+
+        for(Car car : this.cars){
+            if(car.get_type()==1 || car.get_type()==2){
+                dir_x = 1;
+                dir_y = 0;
+            }
+            else if(car.get_type()==3 || car.get_type()==4){
+                dir_x = 0;
+                dir_y = 1;
+            }
+            else{
+                return null;
+            }
+
+            //let's see if the car can go left/up
+            int i = 1;
+            while(!this.is_vacant(car.x - i*dir_x, car.y - i*dir_y)){
+                //It can!
+                //Add a new state
+                State new_state = new State(this);
+                new_state.remove_car(car);
+
+                car.x = car.x - i*dir_x;
+                car.y = car.y - i*dir_y; 
+
+                //bypassing verification of validness
+                new_state.add_car_bypass(car);
+                new_state.sort();
+
+                moves.add(new_state);
+
+                i=i+1;
+            }
+
+            //let's see if the car can go right/down
+            i = 1;
+            while(!this.is_vacant(car.x + (car.len() - 1 + i)*dir_x, car.y + (car.len() - 1 + i)*dir_y)){
+                //It can!
+                //Add a new state
+                State new_state = new State(this);
+                new_state.remove_car(car);
+
+                car.x = car.x + i*dir_x;
+                car.y = car.y + i*dir_y;
+
+                //bypassing verification of validness
+                new_state.add_car_bypass(car);
+                new_state.sort();
+
+                moves.add(new_state);
+
+                i=i+1;
+            }
+        }
+
+        return moves;
     }
 }

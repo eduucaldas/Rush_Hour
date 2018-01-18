@@ -25,10 +25,9 @@ public class Solver {
         }
     }
 
-    //need a function possible states
-    //will just put all valid states to border
+    //returns a list of possible configurations
     private LinkedList<State> possible_moves(State actual) {
-
+        return actual.possible_moves();
     }
 
     //Need a function file_to_state
@@ -72,8 +71,9 @@ public class Solver {
         }
         return null;
     }
-
-    public static void main(String [] args) throws Exception {
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public static void main(String [] args) throws Exception {//tem que mudar isso aqui depois pra try catch DUDU
         Solver game = new Solver("test");
+        game.border.peek().print_state();
     }
 }

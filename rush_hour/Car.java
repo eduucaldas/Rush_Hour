@@ -7,7 +7,7 @@ public class Car implements Comparable<Car>{
 	final static int LARGE = 3;
 	final static char VERTICAL = 'v';
 	final static char HORIZONTAL = 'h';
-	private final int id;
+	private final int id;	//useless, we say two cars are equal regardless of this
 	private final boolean red;
 	private final int len;
 	private final char dir;
@@ -15,15 +15,15 @@ public class Car implements Comparable<Car>{
 	public int y;
 
 	public Car(int id, char dir, int len, int x, int y) throws IllegalArgumentException {
-		
+
 
 		if(id>0)
 			this.id = id;
 		else
 			throw new IllegalArgumentException("id = " + id + " Should be greater than 0");
-		
+
 		this.red = (id == 1);
-		
+
 		if(len == SMALL || len == LARGE)
 			this.len = len;
 		else
@@ -96,12 +96,12 @@ public class Car implements Comparable<Car>{
 	public boolean red() {
 		return this.red;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Car(id = " + this.id() + ", red = " + this.red() + ", len = " + this.len() + ", dir = " + this.dir() + ", (x, y) = (" + this.x + ", " + this.y + "))";
 	}
-	
+
 	@Override
 	public int compareTo(Car other) {
 		//IMPORTANT: This method compares two cars in the following order:
@@ -119,7 +119,7 @@ public class Car implements Comparable<Car>{
 				comp_1 = this.y - other.y;
 				comp_2 = this.x - other.x;
 			}
-			
+
 			if(comp_1 == 0)
 				return comp_2;
 			else
@@ -127,16 +127,16 @@ public class Car implements Comparable<Car>{
 		}
 		else return comp_type;
 	}
-	
+
 	@Override
 	public boolean equals(Object other) {
 		return this.compareTo((Car)other) == 0;
 	}
-	
+
 	public static boolean collision(Car one, Car other) {
 		if(one.dir() != other.dir()) {
 			Car h, v;
-			
+
 			if(one.dir() == HORIZONTAL) {
 				h = one;
 				v = other;
@@ -145,7 +145,7 @@ public class Car implements Comparable<Car>{
 				h = other;
 				v = one;
 			}
-			
+
 			//draw it and see it. the axis are counted from top left
 			return (h.y - v.y >= 0) && (h.y - v.y <= v.len - 1) && (v.x - h.x >= 0) && (v.x - h.x <= h.len - 1);
 		}
@@ -176,9 +176,9 @@ public class Car implements Comparable<Car>{
 			}
 		}
 		return false;
-			
+
 	}
-	
+
 }
 
 

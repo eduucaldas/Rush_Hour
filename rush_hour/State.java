@@ -70,6 +70,11 @@ public class State {
 		return true;
 	}
 
+    //use this always, i`ll make it O(n) first and then i improve it to O(logn)
+    public int find(){
+
+    }
+
 	//this is O(n) shame on me
 	//Not tested
 	public void redCar() {
@@ -159,7 +164,7 @@ public class State {
 				new_state.remove_car(car);
 
 				car.x = car.x - i*dir_x;
-				car.y = car.y - i*dir_y; 
+				car.y = car.y - i*dir_y;
 
 				//bypassing verification of validness
 				new_state.add_car_bypass(car);
@@ -182,6 +187,7 @@ public class State {
 				car.y = car.y + i*dir_y;
 
 				//bypassing verification of validness
+                //HERE we should use find to just swap some cars, it`ll be much quicker
 				new_state.add_car_bypass(car);
 				new_state.sort();
 

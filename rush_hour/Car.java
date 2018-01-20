@@ -102,6 +102,7 @@ public class Car implements Comparable<Car>{
 		return "Car(id = " + this.id() + ", red = " + this.red() + ", len = " + this.len() + ", dir = " + this.dir() + ", (x, y) = (" + this.x + ", " + this.y + "))";
 	}
 
+
 	@Override
 	public int compareTo(Car other) {
 		//IMPORTANT: This method compares two cars in the following order:
@@ -180,5 +181,6 @@ public class Car implements Comparable<Car>{
 	}
 
 }
+
 
 

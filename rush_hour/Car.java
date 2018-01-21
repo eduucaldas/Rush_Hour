@@ -42,6 +42,12 @@ public class Car implements Comparable<Car>{
 			throw new IllegalArgumentException("x,y = " + dir + " Should be bigger than zero");
 		}
 
+	//Easily move the car
+	public Car(Car c, int delta) throws IllegalArgumentException{
+			this(c.id(), c.dir(), c.len(), c.x + ((c.dir() == HORIZONTAL) ? delta:0), c.y + ((c.dir() == VERTICAL) ? delta:0));
+
+	}
+
 	//ATTENTION: in input (x,y) go from 1 to len, but our att come from 0 to len-1
 	public Car(String line) throws IllegalArgumentException{
 		StringTokenizer st = new StringTokenizer(line);
@@ -181,6 +187,4 @@ public class Car implements Comparable<Car>{
 	}
 
 }
-
-
 

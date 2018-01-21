@@ -3,13 +3,17 @@ package rush_hour;
 import java.io.*;
 import java.util.*;
 
+//Question. Do we still need to sort? Yeah
+// TODO: constructor from file used code field before it was init, (is_vacant fault)
+
+
 public class State implements Comparable<State>{
 
     private int size;
     private int number_of_cars;
     private Car redCar;
     private ArrayList<Car> cars;
-    private long code;
+    private Codex code;
 
     //Don't see why
     public State(){
@@ -17,7 +21,7 @@ public class State implements Comparable<State>{
         this.number_of_cars = 0;
         this.cars = new ArrayList<Car>();
         this.redCar = null;
-        this.code = 0;
+        this.code = new Codex();//idk
     }
 
     public State(State other) {//clone
@@ -25,10 +29,34 @@ public class State implements Comparable<State>{
         this.number_of_cars = other.number_of_cars;
         this.cars = new ArrayList<Car>(other.cars);
         this.redCar = other.redCar;
-        this.code = other.code;
+        this.code = new Codex(other.get_code());
     }
+
+    // this does not become more complicated for sorted cars
+    // Important lemma, with our way of comparing, we cannot change the order of the cars by moving them :)
+    // doesn't verify if resulting state is obtainable from other
+    public State(State other, int delta, Car c)throws IllegalArgumentException {
+        //check whether state is obtainable
+        if(!other.is_valid_state()) throw new IllegalArgumentException("the state youre coming from is not valid");
+        if(!other.containsCar(c)) throw new IllegalArgumentException("the car youre moving is not in the state");
+        if(!other.is_valid_move(delta, c)) throw new IllegalArgumentException("the move is not valid");
+
+        this.size = other.size;
+        this.number_of_cars = other.number_of_cars;
+        this.code = new Codex(other.compute_code_neighbor(delta, c));
+        ArrayList<Car> moved_cars = new ArrayList<Car>(other.cars);
+        Car moved = new Car(c,delta);//c but moved of delta
+        moved_cars.set(other.findCar(c), moved);
+        this.cars = moved_cars;
+        if(c.equals(other.redCar))
+            this.redCar = moved;
+        else
+            this.redCar = other.redCar;
+    }
+
+
     //tested
-    public State(String fileName) {
+    public State(String fileName) throws Exception{
         //we will assume that the file has the correct format
         String line = null;
         try {
@@ -46,12 +74,15 @@ public class State implements Comparable<State>{
 
             while((line = bufferedReader.readLine()) != null) {//read line
                 read = new Car(line);
-                //if car overlaps
-                if(!this.is_valid(read)){
-                    throw new IllegalArgumentException("The cars in input had a collision");
-                }
-                else
-                    this.cars.add(read);
+
+                this.cars.add(read);
+            }
+
+            this.code = this.compute_code();
+
+            if(!this.is_valid_state()) {
+                bufferedReader.close();
+                throw new IllegalArgumentException("Cars added had a collision");
             }
             this.redCar = this.cars.get(0);
             Collections.sort(this.cars);
@@ -82,23 +113,34 @@ public class State implements Comparable<State>{
     }
 
     private void set_code() {
-        this.code = this.compute_code();
+        this.code = new Codex(this.compute_code());
     }
 
-    public long get_code() {
-        return this.code;
+    public Codex get_code() {
+        return new Codex(this.code);//otherwise it is not isolated
+    }
+
+    //attention this is NOT isolated
+    public ArrayList<Car> cars(){
+        return this.cars;
     }
 
     //Should test, O(logn)
+    //this become O(n) if cars are not sorted
     public int findCar(Car c){
         return Collections.binarySearch(this.cars, c);
     }
-
+    /*
+    public int findCar(Car c) {
+        return this.cars.indexOf(c);
+    }
+    */
+    //this become O(n) if cars are not sorted
     public boolean containsCar(Car c) {
-        return (this.cars.get(this.findCar(c)) == c);
+        return ((this.cars.get(this.findCar(c))).equals(c));
     }
     //oh java...
-    //test
+    //test?
     private static long minus_pow2(int power) {
         if(power < 0)
             throw new IllegalArgumentException("oooops, you sent a negative number");
@@ -110,7 +152,7 @@ public class State implements Comparable<State>{
 
     //test
     private long code_tile(int x, int y) {
-        return minus_pow2(x+this.get_number_of_cars()*y);
+        return minus_pow2(x+this.get_size()*y);
     }
 
     // made by picking for every position (is position occupied)*2^(x+y*size)
@@ -119,49 +161,56 @@ public class State implements Comparable<State>{
     // Need to use unsigned long, but unsigned doesn't exist
     //Problems
     // Does it need to encode the position of the red car for our application. Don't think so
-    public long compute_code() {
-        long code = Long.MAX_VALUE; // so we can use the all the 64 bits
+    public Codex compute_code() {
+        long[] code = new long[] {Long.MAX_VALUE, Long.MAX_VALUE}; // so we can use the all the 64 bits
         for(Car c: this.cars) {
             if(c.dir() == Car.HORIZONTAL) {
                 for(int d_x = 0 ; d_x < c.len(); d_x++)
-                    code += code_tile(c.x+d_x, c.y);
+                    code[0] += code_tile(c.x+d_x, c.y);
             }
             else {
                 for(int d_y = 0 ; d_y < c.len(); d_y++)
-                    code += code_tile(c.x+d_y, c.y);
+                    code[1] += code_tile(c.x, c.y+d_y);
             }
         }
-        return code;
+        return new Codex(code);
     }
-
+    //////////////////This is why we use HashMap///////////////////////////
     //this is to be used in possible_moves
     //the car should be moving to a valid space already
     //test
-    public long compute_code_neighbour(int delta, Car c) {
-        long code_moved = this.get_code();
+    //
+    public Codex compute_code_neighbor(int delta, Car c) throws IllegalArgumentException{
+        if(!this.containsCar(c)) throw new IllegalArgumentException("The car is out of the State");
+        Codex code_moved = this.get_code();
         if(c.dir() == Car.HORIZONTAL) {
             for(int i = 0; i < c.len(); i++)
-                code_moved += (code_tile(c.x + i + delta, c.y) - code_tile(c.x + i, c.y));//if it is the last tile we might get error, if it turns negative then adds
+                code_moved.update_h(code_tile(c.x + i + delta, c.y) - code_tile(c.x + i, c.y));//if it is the last tile we might get error, if it turns negative then adds
         }
         else {
             for(int i = 0; i < c.len(); i++)
-                code_moved += (code_tile(c.x, c.y + i + delta) - code_tile(c.x, c.y + i));
+                code_moved.update_v(code_tile(c.x, c.y + i + delta) - code_tile(c.x, c.y + i));
         }
         return code_moved;
     }
 
-    //TODO: neighbour_not_discovered, should think, if previous explored would the next one be as well
+    ////////////////////////////////////////////////////////////////
 
-    //Can't use this.code - other.code because of overflow
+    // This is a relaxed compareTo
     @Override
     public int compareTo(State other) {
-        if(this.code > other.code)
+        if(this.code.get_code_h() > other.code.get_code_h())
             return 1;
-        else if(this.code < other.code)
+        else if(this.code.get_code_h() < other.code.get_code_h())
             return -1;
-        else
-            return 0;
-    }
+        else {
+            if(this.code.get_code_v() > other.code.get_code_v())
+                return 1;
+            else if(this.code.get_code_v() < other.code.get_code_v())
+                return -1;
+            else return 0;
+        }
+    }//Can't use this.code - other.code because of overflow
 
     @Override
     public boolean equals(Object other) {
@@ -170,7 +219,91 @@ public class State implements Comparable<State>{
 
     @Override
     public int hashCode() {
-        return Long.hashCode(this.get_code());
+        return this.get_code().hashCode();
+    }
+
+    //number of vacants = size^2 - Sum(len)
+    public boolean is_valid_state() {
+        //number of vacants
+        int n_of_vac = 0;
+        for(int x = 0; x < this.get_size(); x++) {
+            for(int y = 0; y < this.get_size(); y++) {
+                if(is_vacant(x, y)) n_of_vac++;
+            }
+        }
+
+        //sum of len
+        int sum_len = 0;
+        for(Car c: this.cars) sum_len += c.len();
+
+        return (n_of_vac + sum_len == this.get_size() * this.get_size());
+    }
+
+    // test. says if it is ok to add car to the actual state
+    public boolean is_valid(Car car){
+        int x = car.x;
+        int y = car.y;
+        switch(car.get_type()){
+            case 1:
+                return (is_vacant(x,y) && is_vacant(x+1,y));
+            case 2:
+                return (is_vacant(x,y) && is_vacant(x+1,y) && is_vacant(x+2,y));
+            case 3:
+                return (is_vacant(x,y) && is_vacant(x,y+1));
+            case 4:
+                return (is_vacant(x,y) && is_vacant(x,y+1) && is_vacant(x,y+2));
+        }
+        return true;
+    }
+
+    //TEST. Says if the tile (x,y) is vacant, O(1)
+    public boolean is_vacant(int x, int y) {
+        if((x >= 0) && (y >= 0) && (x < this.get_size()) && (y < this.get_size())) {
+            boolean is_vacant_h = (((this.code.get_code_h()/code_tile(x,y))%2 - (Long.MAX_VALUE/code_tile(x,y))%2)%2 == 0);
+            boolean is_vacant_v = (((this.code.get_code_v()/code_tile(x,y))%2 - (Long.MAX_VALUE/code_tile(x,y))%2)%2 == 0);
+            return (is_vacant_h && is_vacant_v);
+        }
+    else return false;
+    }//this is some maths, basically we try to take out the bit of info that we want without overflow
+
+    /*
+    public boolean is_vacant(int x, int y) {
+        if(x >= this.get_size() || y >= this.get_size()){
+            //System.err.println("Out of grid");
+            return false;
+        }
+        for(Car c: cars) {
+            if(c.dir() == Car.VERTICAL && c.x == x && y - c.y >= 0 && y - c.y < c.len()) {
+                return false;
+            }
+            else if(c.dir() == Car.HORIZONTAL && c.y == y && x - c.x >= 0 && x - c.x < c.len()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    */
+
+    //test
+    public boolean is_valid_move(int delta, Car c) {
+        int offset = (delta >= 0) ? c.len() : -1;
+        int sign_delta = (delta >= 0) ? 1 : -1;
+        int mod_delta = sign_delta*delta;
+
+        if(c.dir() == Car.HORIZONTAL) {
+            for(int d_x = 0; d_x < mod_delta; d_x++) {
+                if(!is_vacant(c.x + offset + sign_delta*d_x, c.y))
+                    return false;
+            }
+        }
+        else {
+            for(int d_y = 0; d_y < mod_delta; d_y++) {
+                if(!is_vacant(c.x, c.y + offset + sign_delta*d_y))
+                    return false;
+            }
+        }
+
+        return true;
     }
 
     private void print_add(Car car, int[][] board, int type, int id){
@@ -199,39 +332,29 @@ public class State implements Comparable<State>{
         System.out.println("");
     }
 
-    // test. says if it is ok to add car to the actual state
-    public boolean is_valid(Car car){
-        int x = car.x;
-        int y = car.y;
-        switch(car.get_type()){
-            case 1:
-                return (is_vacant(x,y) && is_vacant(x+1,y));
-            case 2:
-                return (is_vacant(x,y) && is_vacant(x+1,y) && is_vacant(x+2,y));
-            case 3:
-                return (is_vacant(x,y) && is_vacant(x,y+1));
-            case 4:
-                return (is_vacant(x,y) && is_vacant(x,y+1) && is_vacant(x,y+2));
+    private boolean[][] image(){
+        boolean[][] img = new boolean[this.get_size()][this.get_size()];
+
+        for(int x = 0; x < this.get_size(); x++) {
+            for(int y = 0; y < this.get_size(); y++) {
+                img[x][y] = !is_vacant(x,y);
+            }
         }
-        return true;
+        return img;
     }
 
-    //Says if the tile (x,y) is vacant,O(n)
-    // TODO: can do in logn with code()
-    public boolean is_vacant(int x, int y) {
-        if(x >= this.get_size() || y >= this.get_size()){
-            //System.err.println("Out of grid");
-            return false;
-        }
-        for(Car c: cars) {
-            if(c.dir() == Car.VERTICAL && c.x == x && y - c.y >= 0 && y - c.y < c.len()) {
-                return false;
+    public void print_img() {
+        boolean[][] img = this.image();
+        for(int y = 0; y < this.get_size(); y++) {
+            for(int x = 0; x < this.get_size(); x++) {
+                if(img[x][y])
+                    System.out.print("1\t");
+                else
+                    System.out.print("0\t");
             }
-            else if(c.dir() == Car.HORIZONTAL && c.y == y && x - c.x >= 0 && x - c.x < c.len()) {
-                return false;
-            }
+            System.out.println();
         }
-        return true;
+        System.out.println();
     }
 
     //test, tells if the game has ended
@@ -327,4 +450,12 @@ public class State implements Comparable<State>{
 
         return moves;
     }
+
+    public static void main(String[] args) throws Exception{
+        State test = new State("test01.txt");
+        test.print_state();
+        test.print_img();
+
+    }
 }
+

@@ -38,9 +38,9 @@ public class Tester {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		String fileTest = "tests/RushHour1.txt";
-		boolean see_intermediary_solutions = false;
-		//uncomment lines below to tru other heuristics
+		String fileTest = "tests/RushHour1.txt"; // Single test file, you should probably change here
+		boolean see_intermediary_solutions = false; // do you want?
+		//uncomment lines below to use other heuristics
 		Comparator<State> cmp;
 		cmp = new My_Comparator();
 		// cmp = new Blocking_Comparator();
@@ -50,11 +50,11 @@ public class Tester {
 		Tester.StateTest(fileTest);
 		
 		Tester.SolverTest(fileTest, see_intermediary_solutions, new My_Comparator());
-		//If it's too slow for you go to Solver and change time_sleep_print
+		//If it's too slow for you, go to Solver and change time_sleep_print
 		
-		String base = "tests/test";
-		int number_of_tests = 40;
-		String extension = ".txt";
+		String base = "tests/test"; //Change here to fit you test files
+		int number_of_tests = 40; //also here
+		String extension = ".txt"; // probably not here
 		Tester test = new Tester(number_of_tests, base, extension);
 		test.CompareTest();
 	}

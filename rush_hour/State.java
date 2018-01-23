@@ -121,6 +121,10 @@ public class State implements Comparable<State>{
     	return ((this.cars.get(this.findCar(c))).equals(c));
     }
     
+    public void sort(){
+		Collections.sort(cars);
+	}
+    
     //oh java...
     private static long minus_pow2(int power) {
 		if(power < 0)
@@ -189,14 +193,6 @@ public class State implements Comparable<State>{
 		}
 	}//Can't use this.code - other.code because of overflow
 	
-	/*
-	@Override
-	public boolean equals(Object other) {
-		State o = (State) other;
-		return (this.code.get_code_v() == o.get_code().get_code_v()) && (this.code.get_code_h() == o.get_code().get_code_h());
-	}*/
-	
-
 	@Override
 	public int hashCode() {
 		return ((code == null) ? 0 : code.hashCode());
@@ -235,9 +231,6 @@ public class State implements Comparable<State>{
 		
 		return (n_of_vac + sum_len == this.get_size() * this.get_size());
 	}
-	
-
-
 
 	// Says if it is ok to add car to the actual state
 	public boolean is_valid(Car car){
@@ -378,9 +371,6 @@ public class State implements Comparable<State>{
 		else return 0;
 	}//Some complicated math but basically gives a reward for searching solutions closer to red's objective and with other cars where there is more space
 	
-	public void sort(){
-		Collections.sort(cars);
-	}
 	
 	//Test our construction and showing of the State
 	public static void test_print(String filename) throws Exception{

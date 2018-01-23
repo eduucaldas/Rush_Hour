@@ -1,2 +1,0 @@
-Data_Structure for the cars: list of sets, each with a different car class( e.g. h 3, horizontal car with 3 legth)
-class state with: Cars + size of board + red car

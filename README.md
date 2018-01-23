@@ -31,7 +31,7 @@ Heuristic_Comparator Classes:
 
 
 Tester:
-To help you test and understand the most important fonctionalities in the project.
+To help you test and understand the most important fonctionalities in the project. Ps.: You should probably head directly here!
     StateTest: Gives the basic in and outs of a State (constructor, print)
     SolverTest: Solves one problem, with a given heuristics, optionally printing all intermediary States.
     CompareTest: Compare the 4 heuristics implemented in:

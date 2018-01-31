@@ -1,6 +1,14 @@
 # Project Rush_Hour
 
-## Base Classes:
+## How to use?
+1. Download jar file and optionaly tests folder in the same directory
+
+2. run : "java -jar rush_hour.jar" from terminal and follow in screen instructions
+
+3. Want to solve your puzzle? Write it in the format described in the rush_hour_final.pdf and put the file, in the folder tests
+
+## Source Code Quick view
+### Base Classes:
 Car: Represents a car in the game
 
 State: Represents a given instant in the game.
@@ -35,7 +43,7 @@ Solver: Represents the solver of the game:
 5.  print_solution: prints a series of steps to arrive in the solution
    
 
-## Heuristic_Comparator Classes:
+### Heuristic_Comparator Classes:
 They represent the Heuristics as classes of Comparator<State>. Used as the priorities in the border priority queue.
 1. Zero_Comparator: with h = 0. Used mostly for comparison with other methods
 
@@ -46,7 +54,7 @@ They represent the Heuristics as classes of Comparator<State>. Used as the prior
 4. My_Comparator: A hybrid of the past two, giving the most importance to Blocking_Comparator as to continue a consistent heuristic
 
 
-## Tester:
+### Tester:
 To help you test and understand the most important fonctionalities in the project. Ps.: You should probably head directly here!
 1. StateTest: Gives the basic in and outs of a State (constructor, print)
 
@@ -58,4 +66,5 @@ To help you test and understand the most important fonctionalities in the projec
     b. Number of intermediary States
     
     c. Number of states
+
 

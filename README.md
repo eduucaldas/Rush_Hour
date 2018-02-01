@@ -52,7 +52,7 @@ They represent the Heuristics as classes of Comparator<State>. Used as the prior
 
 3. Non_Consistant_Comparator: function that decreases with the distance to the exiting right and bottom wall
 
-4. My_Comparator: A hybrid of the past two, giving the most importance to Blocking_Comparator as to continue a consistent heuristic
+4. My_Comparator: A hybrid of the past two, giving the most importance to Blocking_Comparator as to continue a consistent heuristic. We made it optimized for 6x6 games
 
 
 ### Tester:

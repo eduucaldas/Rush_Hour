@@ -11,6 +11,7 @@ public class State implements Comparable<State>{
 	private Car redCar;
 	private ArrayList<Car> cars;
 	private Codex code;
+	private int dist_origin;
 
 	public State(State other) {//clone
 		this.size = other.size;
@@ -18,6 +19,7 @@ public class State implements Comparable<State>{
 		this.cars = new ArrayList<Car>(other.cars);
 		this.redCar = new Car(other.redCar);//deep copy
 		this.code = new Codex(other.get_code());
+		this.setDist_origin(other.dist_origin());
 	}
 	
 	//Creates State from moving a car in another State
@@ -40,6 +42,7 @@ public class State implements Comparable<State>{
 			this.redCar = moved;
 		else
 			this.redCar = other.redCar;
+		this.setDist_origin(other.dist_origin()+1);
 	}
 	
 	//State from file
@@ -55,7 +58,7 @@ public class State implements Comparable<State>{
         
             //second line is the number of cars
             this.number_of_cars = Integer.parseInt(bufferedReader.readLine());
-            
+            this.setDist_origin(0);
             this.cars = new ArrayList<Car>(this.number_of_cars);
             Car read;
             
@@ -256,7 +259,7 @@ public class State implements Comparable<State>{
 			boolean is_vacant_v = (((this.code.get_code_v()/code_tile(x,y))%2 - (Long.MAX_VALUE/code_tile(x,y))%2)%2 == 0);
 			return (is_vacant_h && is_vacant_v);
 		}
-	else return false;
+		else return false;
 	}//this is some maths, basically we try to take out the bit of info that we want without overflow
 	
 	public boolean is_valid_move(int delta, Car c) {
@@ -339,7 +342,7 @@ public class State implements Comparable<State>{
 	}
 	
 	public int zero_heuristics() {
-		return 0;
+		return this.dist_origin();
 	}
 	
 	public int a_star_heuristics() {
@@ -354,7 +357,7 @@ public class State implements Comparable<State>{
 				if(!this.is_vacant(this.redCar.x, d_y)) n_between ++;
 			}
 		}
-		return n_between;
+		return n_between + this.dist_origin();
 	}
 	
 	//Idea Added to the blockingCars heuristics let's push cars to where there is more space :)
@@ -366,9 +369,9 @@ public class State implements Comparable<State>{
 		if(this.redCar.dir() == Car.VERTICAL && this.redCar.x > this.get_size()/2) reward_v = -reward_v;//puts other cars where there is more space
 		long max_multiplier = Long.MAX_VALUE/(2*this.number_of_cars);
 		if(a != 0) {
-			return (a*max_multiplier + reward_h + reward_v);
+			return (a*max_multiplier + reward_h + reward_v) + this.dist_origin();
 		}
-		else return 0;
+		else return this.dist_origin();
 	}//Some complicated math but basically gives a reward for searching solutions closer to red's objective and with other cars where there is more space
 	
 	
@@ -377,6 +380,14 @@ public class State implements Comparable<State>{
 		State test = new State(filename);
 		test.print_state();
 		test.print_img();
+	}
+
+	public int dist_origin() {
+		return dist_origin;
+	}
+
+	public void setDist_origin(int dist_origin) {
+		this.dist_origin = dist_origin;
 	}
 }
 

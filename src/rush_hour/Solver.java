@@ -59,22 +59,28 @@ public class Solver {
   			for(int i = 1; i < lim_plus; i++) {
   				if(!neighbor_explored(i, initial, c)) {
   					added = new State(initial, i, c);
-  					moves.add(added);
-  					this.prec.put(added, initial);
+  					//If it is not in explored it may still be in the border, treating this now
+  					if(!this.prec.containsKey(added) || (this.prec.get(added).dist_origin() > initial.dist_origin())) {
+  						moves.add(added);
+  	  					this.prec.put(added, initial);
+  					}
   				}
   			}
   			for(int i = -1; i > lim_minus; i--) {
   				if(!neighbor_explored(i, initial, c)) {
   					added = new State(initial, i, c);
-  					moves.add(added);
-  					this.prec.put(added, initial);
+  					//If it is not in explored it may still be in the border, treating this now
+  					if(!this.prec.containsKey(added) || (this.prec.get(added).dist_origin() > initial.dist_origin())) {
+  						moves.add(added);
+  	  					this.prec.put(added, initial);
+  					}
   				}	
   			}
   		}
   		
   		return moves;
   	}
-  	
+
   	private void evolution() {
         State actual;
     	while(!this.border.isEmpty() && !this.border.peek().is_end()) {    

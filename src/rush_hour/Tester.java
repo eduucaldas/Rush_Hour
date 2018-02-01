@@ -34,10 +34,12 @@ public class Tester {
 	
 	public void CompareTest() throws Exception {
 		System.out.println("Comparing heuristics...");
+		long startTime = System.currentTimeMillis();
 		for(String s: files) {
 			System.out.println("For:" + s);
 			Solver.test_compare(s);
 		}
+		System.out.println((System.currentTimeMillis() - startTime) + " milliseconds pour tous les " + this.files.length + " tests");
 	}
 	
 	public static String pickInput(Scanner sc) {
@@ -111,7 +113,9 @@ public class Tester {
 			System.out.println("Pleas put the tests in a tests folder and set their name to a format testXX, with XX digits");
 			System.out.print("How many tests do you have?");
 			Tester test = new Tester(sc.nextInt(), "tests/test", ".txt");
+			
 			test.CompareTest();
+			
 			break;
 		case "4":
 			System.out.println("Ok ok, no one here is a nerd... Chill...");

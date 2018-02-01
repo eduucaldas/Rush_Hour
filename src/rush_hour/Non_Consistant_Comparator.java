@@ -6,7 +6,7 @@ public class Non_Consistant_Comparator implements Comparator<State>{
 	//This just uses the natural order of the states, which favors states close to the right and bottom limit
 	@Override
 	public String toString() {
-		return " a Non Consistant Heuristics";
+		return "Non Consistant Heuristics";
 	}
 
 	@Override

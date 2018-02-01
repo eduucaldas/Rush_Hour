@@ -29,8 +29,9 @@ Sections:
 7. heuristics: Functions with the heuristic to be applied by the Comparators
 
 
+Codex: Bitmask representation of a State, used mainly for performance reasons
 
-Codex: Bitmap representation of a State, used mainly for performance reasons
+
 Solver: Represents the solver of the game:
 1. neighbor_explored: performance reasons
 
@@ -67,4 +68,11 @@ To help you test and understand the most important fonctionalities in the projec
     
     c. Number of states
 
+## Additional Stuff
+1. RushHour_Final.pdf: Project Description. Made by Marie Albenque
+2. tests: Folder with plenty of tests. test47 is one of the most difficult tests found for a 6x6 board, all the other tests were given by Marie
+3. download_tests: Tool for downloading the tests given by Marie Albenque
 
+## Aknowledgements
+Thanks Marie Albenque for the beautiful project proposal :)
+Thanks Ian for the great discussions we had to improve this ;)

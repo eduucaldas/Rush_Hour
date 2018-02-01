@@ -71,7 +71,7 @@ To help you test and understand the most important fonctionalities in the projec
 ## Additional Stuff
 1. RushHour_Final.pdf: Project Description. Made by Marie Albenque
 2. tests: Folder with plenty of tests. test47 is one of the most difficult tests found for a 6x6 board, all the other tests were given by Marie
-3. download_tests: Tool for downloading the tests given by Marie Albenque
+3. download_tests: Tool for downloading the tests
 
 ## Aknowledgements
 Thanks Marie Albenque for the beautiful project proposal :)

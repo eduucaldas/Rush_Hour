@@ -12,7 +12,7 @@ public class State implements Comparable<State>{
 	private ArrayList<Car> cars;
 	private Codex code;
 	private int dist_origin;
-
+	
 	public State(State other) {//clone
 		this.size = other.size;
 		this.number_of_cars = other.number_of_cars;
@@ -363,15 +363,16 @@ public class State implements Comparable<State>{
 	//Idea Added to the blockingCars heuristics let's push cars to where there is more space :)
 	public long my_heuristics() {
 		int a = this.a_star_heuristics();
-		long reward_v = (this.get_code().get_code_v()/(long)(8*this.number_of_cars));
-		long reward_h = (this.get_code().get_code_h()/(long)(8*this.number_of_cars));
+		int div = 2*(93 + this.number_of_cars);//92 is the maximum number of moves to arrive at solution
+		long reward_v = ((this.get_code().get_code_v() + (32*((long)Integer.MAX_VALUE + 1) - 1 - Long.MAX_VALUE))/(long)(4*div));
+		long reward_h = ((this.get_code().get_code_h() + (32*((long)Integer.MAX_VALUE + 1) - 1 - Long.MAX_VALUE))/(long)(4*div));
 		if(this.redCar.dir() == Car.HORIZONTAL && this.redCar.y > this.get_size()/2) reward_h = -reward_h;
 		if(this.redCar.dir() == Car.VERTICAL && this.redCar.x > this.get_size()/2) reward_v = -reward_v;//puts other cars where there is more space
-		long max_multiplier = Long.MAX_VALUE/(2*this.number_of_cars);
+		long max_multiplier = (32*((long)Integer.MAX_VALUE+1) - 1)/(div);
 		if(a != 0) {
-			return (a*max_multiplier + reward_h + reward_v) + this.dist_origin();
+			return (a*max_multiplier + reward_h + reward_v);
 		}
-		else return this.dist_origin();
+		else return 0;
 	}//Some complicated math but basically gives a reward for searching solutions closer to red's objective and with other cars where there is more space
 	
 	

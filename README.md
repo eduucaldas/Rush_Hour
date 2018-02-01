@@ -75,4 +75,5 @@ To help you test and understand the most important fonctionalities in the projec
 
 ## Aknowledgements
 Thanks Marie Albenque for the beautiful project proposal :)
+
 Thanks Ian for the great discussions we had to improve this ;)

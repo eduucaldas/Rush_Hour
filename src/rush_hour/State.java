@@ -364,11 +364,11 @@ public class State implements Comparable<State>{
 	public long my_heuristics() {
 		int a = this.a_star_heuristics();
 		int div = 2*(93 + this.number_of_cars);//92 is the maximum number of moves to arrive at solution
-		long reward_v = ((this.get_code().get_code_v() + (32*((long)Integer.MAX_VALUE + 1) - 1 - Long.MAX_VALUE))/(long)(4*div));
-		long reward_h = ((this.get_code().get_code_h() + (32*((long)Integer.MAX_VALUE + 1) - 1 - Long.MAX_VALUE))/(long)(4*div));
+		long reward_v = ((this.get_code().get_code_v() + (32*((long)Integer.MAX_VALUE + 1) - 1 - Long.MAX_VALUE)));
+		long reward_h = ((this.get_code().get_code_h() + (32*((long)Integer.MAX_VALUE + 1) - 1 - Long.MAX_VALUE)));
 		if(this.redCar.dir() == Car.HORIZONTAL && this.redCar.y > this.get_size()/2) reward_h = -reward_h;
 		if(this.redCar.dir() == Car.VERTICAL && this.redCar.x > this.get_size()/2) reward_v = -reward_v;//puts other cars where there is more space
-		long max_multiplier = (32*((long)Integer.MAX_VALUE+1) - 1)/(div);
+		long max_multiplier = 8*(32*((long)Integer.MAX_VALUE+1) - 1);
 		if(a != 0) {
 			return (a*max_multiplier + reward_h + reward_v);
 		}
